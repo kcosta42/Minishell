@@ -6,7 +6,7 @@
 #*   By: kcosta <kcosta@student.42.fr>              +#+  +:+       +#+        *#
 #*                                                +#+#+#+#+#+   +#+           *#
 #*   Created: 2016/11/02 10:00:00 by kcosta            #+#    #+#             *#
-#*   Updated: 2016/12/04 18:17:59 by kcosta           ###   ########.fr       *#
+#*   Updated: 2016/12/07 18:09:00 by kcosta           ###   ########.fr       *#
 #*                                                                            *#
 #* ************************************************************************** *#
 
@@ -57,7 +57,9 @@ FILES =	string/ft_strcat.c \
 		string/ft_strsub.c \
 		string/ft_strstr.c \
 		string/ft_strtrim.c \
+		string/ft_strepur.c \
 		string/ft_strsplit.c \
+		string/ft_strisalnum.c \
 		ctype/ft_isalnum.c \
 		ctype/ft_isascii.c \
 		ctype/ft_isblank.c \

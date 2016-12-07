@@ -6,7 +6,7 @@
 /*   By: kcosta <kcosta@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/11/30 14:57:13 by kcosta            #+#    #+#             */
-/*   Updated: 2016/12/01 13:16:44 by kcosta           ###   ########.fr       */
+/*   Updated: 2016/12/07 18:09:51 by kcosta           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,6 +41,7 @@ void	ft_strdel(char **as);
 
 char	*ft_strrev(char *s);
 char	*ft_strtrim(const char *s);
+char	*ft_strepur(const char *s);
 
 void	ft_striter(char *s, void (*f)(char*));
 void	ft_striteri(char *s, void (*f)(unsigned int, char *));
@@ -48,5 +49,7 @@ char	*ft_strmap(const char *s, char (*f)(char));
 char	*ft_strmapi(const char *s, char (*f)(unsigned int, char));
 
 char	**ft_strsplit(const char *s, char c);
+
+int		ft_strisalnum(const char *s);
 
 #endif

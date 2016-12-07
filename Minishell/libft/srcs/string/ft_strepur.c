@@ -1,37 +1,35 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_next_line.c                                    :+:      :+:    :+:   */
+/*   ft_strepur.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: kcosta <kcosta@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2016/11/09 13:00:28 by kcosta            #+#    #+#             */
-/*   Updated: 2016/12/07 14:10:50 by kcosta           ###   ########.fr       */
+/*   Created: 2016/12/07 14:30:27 by kcosta            #+#    #+#             */
+/*   Updated: 2016/12/07 14:43:18 by kcosta           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "ft_utils.h"
 #include "ft_string.h"
-#include <stdio.h>
+#include "ft_ctype.h"
 
-int			ft_getline(const int fd, char **line)
+char	*ft_strepur(const char *str)
 {
-	char	buff[2];
-	char	*dup;
-	char	*tmp;
-	int		ret;
+	char	*ret;
+	char	*epur;
 
-	dup = ft_strnew(0);
-	while ((ret = read(fd, buff, 1)) > 0)
+	epur = ft_strnew(ft_strlen(str));
+	ret = epur;
+	while (*str && ft_isblank(*str))
+		str++;
+	while (*str)
 	{
-		buff[1] = 0;
-		if (!ft_strcmp(buff, "\n"))
-			break ;
-		tmp = dup;
-		dup = ft_strjoin(dup, buff);
-		ft_strdel(&tmp);
+		while (*str && !ft_isblank(*str))
+			*epur++ = *str++;
+		while (ft_isblank(*str))
+			str++;
+		if (*str)
+			*epur++ = ' ';
 	}
-	*line = ft_strdup(dup);
-	ft_strdel(&dup);
 	return (ret);
 }

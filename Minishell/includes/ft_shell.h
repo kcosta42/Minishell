@@ -1,37 +1,30 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_next_line.c                                    :+:      :+:    :+:   */
+/*   ft_shell.h                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: kcosta <kcosta@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2016/11/09 13:00:28 by kcosta            #+#    #+#             */
-/*   Updated: 2016/12/07 14:10:50 by kcosta           ###   ########.fr       */
+/*   Created: 2016/12/07 16:17:30 by kcosta            #+#    #+#             */
+/*   Updated: 2016/12/07 19:02:01 by kcosta           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "ft_utils.h"
-#include "ft_string.h"
-#include <stdio.h>
+#ifndef FT_SHELL_H
+# define FT_SHELL_H
 
-int			ft_getline(const int fd, char **line)
-{
-	char	buff[2];
-	char	*dup;
-	char	*tmp;
-	int		ret;
+# include <fcntl.h>
+# include <signal.h>
 
-	dup = ft_strnew(0);
-	while ((ret = read(fd, buff, 1)) > 0)
-	{
-		buff[1] = 0;
-		if (!ft_strcmp(buff, "\n"))
-			break ;
-		tmp = dup;
-		dup = ft_strjoin(dup, buff);
-		ft_strdel(&tmp);
-	}
-	*line = ft_strdup(dup);
-	ft_strdel(&dup);
-	return (ret);
-}
+# include "libft.h"
+
+int		ft_builtins(const char *path, char **argv, char ***envp);
+int		ft_env(char **argv, char **envp);
+int		ft_setenv(char **argv, char ***envp);
+int		ft_unsetenv(char **argv, char ***envp);
+
+size_t	ft_tablen(char **tab);
+char	**ft_tabdup(char **tab, char *entry);
+void	ft_tabdel(char ***tab);
+
+#endif

@@ -1,37 +1,27 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_next_line.c                                    :+:      :+:    :+:   */
+/*   ft_strisalnum.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: kcosta <kcosta@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2016/11/09 13:00:28 by kcosta            #+#    #+#             */
-/*   Updated: 2016/12/07 14:10:50 by kcosta           ###   ########.fr       */
+/*   Created: 2016/12/07 18:07:55 by kcosta            #+#    #+#             */
+/*   Updated: 2016/12/07 18:10:39 by kcosta           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "ft_utils.h"
-#include "ft_string.h"
-#include <stdio.h>
+#include "libft.h"
+#include "ft_ctype.h"
 
-int			ft_getline(const int fd, char **line)
+int		ft_strisalnum(const char *str)
 {
-	char	buff[2];
-	char	*dup;
-	char	*tmp;
-	int		ret;
-
-	dup = ft_strnew(0);
-	while ((ret = read(fd, buff, 1)) > 0)
+	if (!str)
+		return (0);
+	while (*str)
 	{
-		buff[1] = 0;
-		if (!ft_strcmp(buff, "\n"))
-			break ;
-		tmp = dup;
-		dup = ft_strjoin(dup, buff);
-		ft_strdel(&tmp);
+		if (!ft_isalnum(*str))
+			return (0);
+		str++;
 	}
-	*line = ft_strdup(dup);
-	ft_strdel(&dup);
-	return (ret);
+	return (1);
 }
