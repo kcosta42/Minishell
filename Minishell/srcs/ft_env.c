@@ -6,7 +6,7 @@
 /*   By: kcosta <kcosta@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/12/07 16:57:32 by kcosta            #+#    #+#             */
-/*   Updated: 2016/12/07 19:36:04 by kcosta           ###   ########.fr       */
+/*   Updated: 2016/12/08 17:53:39 by kcosta           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,8 @@ int			ft_env(char **argv, char **envp)
 {
 	int		i;
 
-	(void)argv;
+	if (ft_tablen(argv) != 1)
+		return (ft_printf("env: %s: Permission denied\n", argv[1]));
 	i = 0;
 	while (envp[i])
 		ft_printf("%s\n", envp[i++]);
@@ -26,39 +27,46 @@ int			ft_env(char **argv, char **envp)
 
 int			ft_unsetenv(char **argv, char ***envp)
 {
-	(void)envp;
-	while (*argv)
-		argv++;
+	char	*entry;
+	int		index;
+
+	index = 1;
+	while (argv[index])
+	{
+		entry = ft_strjoin(argv[index], "=");
+		if (ft_tabstr(*envp, entry))
+			ft_tabreplace(envp, entry, NULL);
+		else
+			ft_strdel(&entry);
+		index++;
+	}
 	return (0);
 }
 
 int			ft_setenv(char **argv, char ***envp)
 {
+	char	*var;
 	char	*entry;
-	char	*tmp;
 	char	**envtmp;
 
+	entry = NULL;
 	if (!argv[1])
 		return (ft_env(argv, *envp));
 	if (ft_tablen(argv) > 3)
 		return (ft_printf("setenv: Too many arguments.\n"));
 	if (ft_strisalnum(argv[1]))
-		entry = ft_strjoin(argv[1], "=");
+		var = ft_strjoin(argv[1], "=");
 	else
-		return (ft_printf("setenv: Variable name must \
-contain alphanumeric characters.\n"));
-	if (ft_strisalnum(argv[2]))
-	{
-		tmp = entry;
-		entry = ft_strjoin(entry, argv[2]);
-		ft_strdel(&tmp);
-	}
+		return (ft_printf("setenv: Variable name incorrect.\n"));
+	if (argv[2])
+		entry = ft_strjoin(var, argv[2]);
+	if (ft_tabstr(*envp, var))
+		return (ft_tabreplace(envp, var, (entry) ? entry : var));
 	envtmp = *envp;
-	*envp = ft_tabdup(*envp, entry);
-	ft_strdel(&entry);
-//	for (int i = 0; envtmp[i]; i++)
-//		ft_strdel(&envtmp[i]);
-//	ft_strdel((char**)&envtmp);
-	//ft_tabdel(&envtmp);
+	*envp = ft_tabdup(*envp, (entry) ? entry : var);
+	if (entry)
+		ft_strdel(&entry);
+	ft_strdel(&var);
+	ft_tabdel(&envtmp);
 	return (0);
 }

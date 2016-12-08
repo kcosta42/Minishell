@@ -6,7 +6,7 @@
 /*   By: kcosta <kcosta@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/12/07 16:04:13 by kcosta            #+#    #+#             */
-/*   Updated: 2016/12/07 19:40:39 by kcosta           ###   ########.fr       */
+/*   Updated: 2016/12/08 18:40:08 by kcosta           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,15 +38,17 @@ int			ft_builtins(const char *path, char **argv, char ***envp)
 		return (0);
 	if (!ft_strcmp(path, "echo"))
 		(void)ft_echo(argv);
-/*	else if (!ft_strcmp(path, "cd"))
-*/	else if (!ft_strcmp(path, "setenv"))
+	else if (!ft_strcmp(path, "cd"))
+		(void)ft_cd(argv, envp, 0);
+	else if (!ft_strcmp(path, "setenv"))
 		(void)ft_setenv(argv, envp);
 	else if (!ft_strcmp(path, "unsetenv"))
 		(void)ft_unsetenv(argv, envp);
 	else if (!ft_strcmp(path, "env"))
 		(void)ft_env(argv, *envp);
-/*	else if (!ft_strcmp(path, "exit"))
-*/	else
+	else if (!ft_strcmp(path, "exit"))
+		exit(1);
+	else
 		return (1);
 	return (0);
 }

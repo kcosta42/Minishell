@@ -1,27 +1,36 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_strisalnum.c                                    :+:      :+:    :+:   */
+/*   ft_strrstr.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: kcosta <kcosta@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2016/12/07 18:07:55 by kcosta            #+#    #+#             */
-/*   Updated: 2016/12/08 15:16:35 by kcosta           ###   ########.fr       */
+/*   Created: 2016/12/08 16:40:03 by kcosta            #+#    #+#             */
+/*   Updated: 2016/12/08 16:44:35 by kcosta           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
-#include "ft_ctype.h"
+#include "ft_string.h"
 
-int		ft_strisalnum(const char *str)
+char	*ft_strrstr(const char *big, const char *little)
 {
-	if (!str)
-		return (0);
-	while (*str)
+	int		i;
+	int		end;
+
+	if (!*little)
+		return ((char*)big);
+	end = ft_strlen(big) - 1;
+	while (end)
 	{
-		if (!ft_isalnum(*str) && *str != '_')
-			return (0);
-		str++;
+		if (big[end] == *little)
+		{
+			i = 0;
+			while (big[end + i] && little[i] && big[end + i] == little[i])
+				i++;
+			if (!little[i])
+				return ((char*)&big[end]);
+		}
+		end--;
 	}
-	return (1);
+	return (NULL);
 }

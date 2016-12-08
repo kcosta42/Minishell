@@ -6,26 +6,85 @@
 /*   By: kcosta <kcosta@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/12/07 12:43:07 by kcosta            #+#    #+#             */
-/*   Updated: 2016/12/07 19:47:31 by kcosta           ###   ########.fr       */
+/*   Updated: 2016/12/08 19:05:12 by kcosta           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 #include "ft_shell.h"
 
-int			main(int argc, char **argv, char **envp)
+static void		ft_display_prompt(char **envp)
+{
+	static char	*pwd = NULL;
+	char		**path;
+	int			size;
+
+	if (envp)
+	{
+//		if (pwd)
+//			ft_strdel(&pwd);
+		pwd = *ft_tabstr(envp, "PWD=") + 4;
+	}
+	path = ft_strsplit(pwd, '/');
+	size = ft_tablen(path) - 1;
+	ft_printf("\n\033[1;34m");
+	if (size >= 2)
+		ft_printf("%s/", path[size - 2]);
+	if (size >= 1)
+		ft_printf("%s/", path[size - 1]);
+	if (size >= 0)
+		ft_printf("%s", path[size]);
+	ft_printf("\033[0m\n%C ",  L'▶');
+	ft_tabdel(&path);
+}
+
+static void		sig_handler(int signal)
+{
+	(void)signal;
+	ft_putchar('\n');
+	ft_display_prompt(NULL);
+	return ;
+}
+
+int				ft_find_command(char *command, char **argv, char **envp)
+{
+	char	*tmp;
+	char	*new;
+	char	**paths;
+	int		i;
+
+	i = 0;
+	execve(command, argv, envp);
+	paths = ft_strsplit(*ft_tabstr(envp, "PATH="), ':');
+	paths[0] = ft_strstr(paths[0], "=") + 1;
+	while (paths[i])
+	{
+		tmp = ft_strjoin(paths[i], "/");
+		new = ft_strjoin(tmp, command);
+		execve(new, argv, envp);
+		i++;
+	}
+	return (0);
+}
+
+int				main(int argc, char **argv, char **envp)
 {
 	pid_t	process;
 	char	*line;
 	char	*commands;
+	int		ret;
 
 	(void)argc;
-	(void)envp;
-	(void)process;
+	ret = 1;
+	envp = ft_tabdup(envp, NULL);
+	ft_cd(argv, &envp, 1);
 	while (42)
 	{
-		ft_printf("\n\033[1;34m%s\033[0m\n%C ", "Minishell", L'▶');
-		if (ft_getline(0, &line) > 0)
+		ft_display_prompt(envp);
+		signal(SIGINT, sig_handler);
+		if (ret == 0)
+			exit(1);
+		if ((ret = ft_getline(0, &line)) >= 0)
 		{
 			commands = ft_strepur(line);
 			argv = ft_strsplit(commands, ' ');
@@ -34,29 +93,17 @@ int			main(int argc, char **argv, char **envp)
 				process = fork();
 				if (!process)
 				{
-					execve(argv[0], argv, envp);
+					ft_find_command(argv[0], argv, envp);
 					ft_printf("0sh: Command not found: %s\n", argv[0]);
 				}
 				if (process > 0)
 					wait(NULL);
-				for (int i = 0; argv[i]; i++)
-					ft_strdel(&argv[i]);
-				ft_strdel((char**)&argv);
-				ft_strdel(&line);
-				ft_strdel(&commands);
 				if (!process)
 					exit(1);
 			}
-			if (argv)
-			{
-				for (int i = 0; argv[i]; i++)
-					ft_strdel(&argv[i]);
-				ft_strdel((char**)&argv);
-			}
-			if (line)
-				ft_strdel(&line);
-			if (commands)
-				ft_strdel(&commands);
+			ft_tabdel(&argv);
+			ft_strdel(&line);
+			ft_strdel(&commands);
 		}
 	}
 }
