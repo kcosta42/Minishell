@@ -6,7 +6,7 @@
 #*   By: kcosta <kcosta@student.42.fr>              +#+  +:+       +#+        *#
 #*                                                +#+#+#+#+#+   +#+           *#
 #*   Created: 2016/12/02 14:01:12 by kcosta            #+#    #+#             *#
-#*   Updated: 2016/12/08 16:03:16 by kcosta           ###   ########.fr       *#
+#*   Updated: 2016/12/09 19:41:01 by kcosta           ###   ########.fr       *#
 #*                                                                            *#
 #* ************************************************************************** *#
 
@@ -30,6 +30,7 @@ FILES = minishell.c \
 		ft_builtins.c \
 		ft_env.c \
 		ft_cd.c \
+		ft_cd_utils.c \
 		ft_tab.c
 SRCS = $(addprefix $(SRCS_PATH), $(FILES))
 OBJS = $(SRCS:.c=.o)

@@ -6,7 +6,7 @@
 /*   By: kcosta <kcosta@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/12/07 16:17:30 by kcosta            #+#    #+#             */
-/*   Updated: 2016/12/08 18:40:20 by kcosta           ###   ########.fr       */
+/*   Updated: 2016/12/09 22:08:42 by kcosta           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,9 @@ int		ft_setenv(char **argv, char ***envp);
 int		ft_unsetenv(char **argv, char ***envp);
 
 int		ft_cd(char **argv, char ***envp, int init);
+int		ft_cd_initialise(char **pwd, char **old_pwd, char **envp);
+int		ft_set_pwd(char ***envp, char *pwd, char *old_pwd);
+char	*ft_get_path(char **path);
 
 size_t	ft_tablen(char **tab);
 char	**ft_tabdup(char **tab, char *entry);

@@ -6,12 +6,13 @@
 /*   By: kcosta <kcosta@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/12/07 12:43:07 by kcosta            #+#    #+#             */
-/*   Updated: 2016/12/08 19:05:12 by kcosta           ###   ########.fr       */
+/*   Updated: 2016/12/09 22:25:13 by kcosta           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 #include "ft_shell.h"
+#include <sys/ioctl.h>
 
 static void		ft_display_prompt(char **envp)
 {
@@ -20,20 +21,16 @@ static void		ft_display_prompt(char **envp)
 	int			size;
 
 	if (envp)
-	{
-//		if (pwd)
-//			ft_strdel(&pwd);
 		pwd = *ft_tabstr(envp, "PWD=") + 4;
-	}
 	path = ft_strsplit(pwd, '/');
 	size = ft_tablen(path) - 1;
+	size = (size < 0) ? 0 : size;
 	ft_printf("\n\033[1;34m");
 	if (size >= 2)
 		ft_printf("%s/", path[size - 2]);
 	if (size >= 1)
 		ft_printf("%s/", path[size - 1]);
-	if (size >= 0)
-		ft_printf("%s", path[size]);
+	ft_printf("%s", (path[size]) ? path[size] : "/");
 	ft_printf("\033[0m\n%C ",  L'▶');
 	ft_tabdel(&path);
 }
@@ -80,10 +77,11 @@ int				main(int argc, char **argv, char **envp)
 	ft_cd(argv, &envp, 1);
 	while (42)
 	{
-		ft_display_prompt(envp);
-		signal(SIGINT, sig_handler);
 		if (ret == 0)
 			exit(1);
+		ft_display_prompt(envp);
+		signal(SIGINT, sig_handler);
+		//ioctl(0, TIOCSTI, "l");
 		if ((ret = ft_getline(0, &line)) >= 0)
 		{
 			commands = ft_strepur(line);

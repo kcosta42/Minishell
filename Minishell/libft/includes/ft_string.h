@@ -6,7 +6,7 @@
 /*   By: kcosta <kcosta@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/11/30 14:57:13 by kcosta            #+#    #+#             */
-/*   Updated: 2016/12/08 16:42:51 by kcosta           ###   ########.fr       */
+/*   Updated: 2016/12/09 12:05:00 by kcosta           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,6 +39,7 @@ char	*ft_strsub(const char *s, unsigned int start, size_t len);
 char	*ft_strjoin(const char *s1, const char *s2);
 void	ft_strclr(char *s);
 void	ft_strdel(char **as);
+void	ft_strswp(char **s1, char **s2);
 
 char	*ft_strrev(char *s);
 char	*ft_strtrim(const char *s);
