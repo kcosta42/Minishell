@@ -6,7 +6,7 @@
 /*   By: kcosta <kcosta@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/12/07 12:43:07 by kcosta            #+#    #+#             */
-/*   Updated: 2016/12/09 22:25:13 by kcosta           ###   ########.fr       */
+/*   Updated: 2016/12/10 11:50:03 by kcosta           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,20 +17,25 @@
 static void		ft_display_prompt(char **envp)
 {
 	static char	*pwd = NULL;
+	char		**tmp;
 	char		**path;
 	int			size;
 
 	if (envp)
-		pwd = *ft_tabstr(envp, "PWD=") + 4;
-	path = ft_strsplit(pwd, '/');
+		if ((tmp = ft_tabstr(envp, "PWD=")))
+		{
+			if (pwd)
+				ft_strdel(&pwd);
+			pwd = ft_strdup(*tmp + 4);
+		}
+	path = ft_path_split(pwd);
 	size = ft_tablen(path) - 1;
-	size = (size < 0) ? 0 : size;
 	ft_printf("\n\033[1;34m");
 	if (size >= 2)
 		ft_printf("%s/", path[size - 2]);
 	if (size >= 1)
 		ft_printf("%s/", path[size - 1]);
-	ft_printf("%s", (path[size]) ? path[size] : "/");
+	ft_printf("%s", path[size]);
 	ft_printf("\033[0m\n%C ",  L'▶');
 	ft_tabdel(&path);
 }

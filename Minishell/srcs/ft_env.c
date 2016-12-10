@@ -6,7 +6,7 @@
 /*   By: kcosta <kcosta@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/12/07 16:57:32 by kcosta            #+#    #+#             */
-/*   Updated: 2016/12/09 18:08:59 by kcosta           ###   ########.fr       */
+/*   Updated: 2016/12/10 09:19:26 by kcosta           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,6 +42,14 @@ int			ft_unsetenv(char **argv, char ***envp)
 	return (0);
 }
 
+static int	ft_setenv_exist(char ***envp, char **var, char **entry)
+{
+	ft_tabreplace(envp, *var, (*entry) ? *entry : *var);
+	if (*entry)
+		ft_strdel(var);
+	return (0);
+}
+
 int			ft_setenv(char **argv, char ***envp)
 {
 	char	*var;
@@ -60,12 +68,7 @@ int			ft_setenv(char **argv, char ***envp)
 	if (argv[2])
 		entry = ft_strjoin(var, argv[2]);
 	if (ft_tabstr(*envp, var))
-	{
-		ft_tabreplace(envp, var, (entry) ? entry : var);
-		if (entry)
-			ft_strdel(&var);
-		return (0);
-	}
+		return (ft_setenv_exist(envp, &var, &entry));
 	envtmp = *envp;
 	*envp = ft_tabdup(*envp, (entry) ? entry : var);
 	if (entry)

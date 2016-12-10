@@ -6,7 +6,7 @@
 /*   By: kcosta <kcosta@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/12/07 18:28:25 by kcosta            #+#    #+#             */
-/*   Updated: 2016/12/09 17:47:56 by kcosta           ###   ########.fr       */
+/*   Updated: 2016/12/10 09:08:44 by kcosta           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,8 +35,6 @@ int			ft_tabreplace(char ***tab, char *to_find, char *entry)
 	if (result)
 		**result = 0;
 	tmp = *tab;
-	//if (to_find != entry)
-	//	ft_strdel(&to_find);
 	*tab = ft_tabdup(*tab, entry);
 	ft_tabdel(&tmp);
 	return (0);
