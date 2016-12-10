@@ -6,7 +6,7 @@
 /*   By: kcosta <kcosta@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/12/07 12:43:07 by kcosta            #+#    #+#             */
-/*   Updated: 2016/12/10 11:50:03 by kcosta           ###   ########.fr       */
+/*   Updated: 2016/12/10 17:13:05 by kcosta           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,7 @@ static void		sig_handler(int signal)
 	return ;
 }
 
-int				ft_find_command(char *command, char **argv, char **envp)
+static int		ft_find_command(char *command, char **argv, char **envp)
 {
 	char	*tmp;
 	char	*new;
@@ -63,6 +63,9 @@ int				ft_find_command(char *command, char **argv, char **envp)
 	{
 		tmp = ft_strjoin(paths[i], "/");
 		new = ft_strjoin(tmp, command);
+		if (!access(new, F_OK))
+			if (access(new, X_OK) == -1)
+				return (ft_printf("%s: Permission denied.\n", command));
 		execve(new, argv, envp);
 		i++;
 	}
@@ -74,21 +77,20 @@ int				main(int argc, char **argv, char **envp)
 	pid_t	process;
 	char	*line;
 	char	*commands;
-	int		ret;
 
-	(void)argc;
-	ret = 1;
+	argc = 1;
 	envp = ft_tabdup(envp, NULL);
 	ft_cd(argv, &envp, 1);
 	while (42)
 	{
-		if (ret == 0)
+		if (argc == 0)
 			exit(1);
 		ft_display_prompt(envp);
 		signal(SIGINT, sig_handler);
 		//ioctl(0, TIOCSTI, "l");
-		if ((ret = ft_getline(0, &line)) >= 0)
+		if ((argc = ft_getline(0, &line)) >= 0)
 		{
+			(void)ft_get_commands(line);
 			commands = ft_strepur(line);
 			argv = ft_strsplit(commands, ' ');
 			if (ft_builtins(argv[0], argv, &envp))
@@ -96,8 +98,8 @@ int				main(int argc, char **argv, char **envp)
 				process = fork();
 				if (!process)
 				{
-					ft_find_command(argv[0], argv, envp);
-					ft_printf("0sh: Command not found: %s\n", argv[0]);
+					if (!ft_find_command(argv[0], argv, envp))
+						ft_printf("0sh: Command not found: %s\n", argv[0]);
 				}
 				if (process > 0)
 					wait(NULL);

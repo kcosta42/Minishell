@@ -6,7 +6,7 @@
 /*   By: kcosta <kcosta@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/12/08 15:59:46 by kcosta            #+#    #+#             */
-/*   Updated: 2016/12/10 12:51:04 by kcosta           ###   ########.fr       */
+/*   Updated: 2016/12/10 14:21:24 by kcosta           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,7 +75,7 @@ static int		ft_cd_manage(char ***envp, char **path, char **pwd, char **old)
 	return (ft_set_pwd(envp, *pwd, *old));
 }
 
-static int	ft_cd_home(char *home, char ***envp, char **pwd, char **old_pwd)
+static int		ft_cd_home(char *home, char ***envp, char **pwd, char **old_pwd)
 {
 	if (chdir(home) == -1)
 		return (ft_printf("cd: HOME not found.\n"));
@@ -97,7 +97,7 @@ int				ft_cd(char **argv, char ***envp, int init)
 		return (ft_cd_initialise(&home, &pwd, &old_pwd, *envp));
 	if (ft_tablen(argv) > 2)
 		return (ft_printf("cd: String not in pwd.\n"));
-	if (!argv[1])
+	if (!argv[1] || !ft_strcmp(argv[1], "~"))
 		return (ft_cd_home(home, envp, &pwd, &old_pwd));
 	if (ft_isvalid_path(pwd, argv[1]))
 		return (1);

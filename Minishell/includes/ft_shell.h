@@ -6,7 +6,7 @@
 /*   By: kcosta <kcosta@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/12/07 16:17:30 by kcosta            #+#    #+#             */
-/*   Updated: 2016/12/10 11:03:33 by kcosta           ###   ########.fr       */
+/*   Updated: 2016/12/10 16:49:52 by kcosta           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,7 @@
 
 typedef void	(*t_sig)(int);
 
+char	**ft_get_commands(const char *line);
 int		ft_builtins(const char *path, char **argv, char ***envp);
 
 int		ft_env(char **argv, char **envp);
