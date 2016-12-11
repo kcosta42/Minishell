@@ -6,7 +6,7 @@
 /*   By: kcosta <kcosta@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/12/07 16:04:13 by kcosta            #+#    #+#             */
-/*   Updated: 2016/12/08 18:40:08 by kcosta           ###   ########.fr       */
+/*   Updated: 2016/12/11 11:02:47 by kcosta           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,7 @@ int			ft_builtins(const char *path, char **argv, char ***envp)
 	else if (!ft_strcmp(path, "env"))
 		(void)ft_env(argv, *envp);
 	else if (!ft_strcmp(path, "exit"))
-		exit(1);
+		exit((argv[1]) ? ft_atoi(argv[1]) : 0);
 	else
 		return (1);
 	return (0);

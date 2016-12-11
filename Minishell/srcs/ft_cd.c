@@ -6,7 +6,7 @@
 /*   By: kcosta <kcosta@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/12/08 15:59:46 by kcosta            #+#    #+#             */
-/*   Updated: 2016/12/10 14:21:24 by kcosta           ###   ########.fr       */
+/*   Updated: 2016/12/11 11:29:23 by kcosta           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,10 @@ static int		ft_cd_forward(char *arg, char **pwd)
 		*pwd = path;
 		return (chdir(*pwd));
 	}
-	tmp = ft_strjoin(*pwd, "/");
+	if (ft_strcmp(*pwd, "/"))
+		tmp = ft_strjoin(*pwd, "/");
+	else
+		tmp = ft_strdup(*pwd);
 	path = ft_strjoin(tmp, arg);
 	ft_strdel(&tmp);
 	chdir(path);

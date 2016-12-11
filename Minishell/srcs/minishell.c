@@ -6,7 +6,7 @@
 /*   By: kcosta <kcosta@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/12/07 12:43:07 by kcosta            #+#    #+#             */
-/*   Updated: 2016/12/10 17:13:05 by kcosta           ###   ########.fr       */
+/*   Updated: 2016/12/11 14:32:07 by kcosta           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,9 +31,9 @@ static void		ft_display_prompt(char **envp)
 	path = ft_path_split(pwd);
 	size = ft_tablen(path) - 1;
 	ft_printf("\n\033[1;34m");
-	if (size >= 2)
+	if (size >= 2 && ft_strcmp(path[size - 2], "/"))
 		ft_printf("%s/", path[size - 2]);
-	if (size >= 1)
+	if (size >= 1 && ft_strcmp(path[size - 1], "/"))
 		ft_printf("%s/", path[size - 1]);
 	ft_printf("%s", path[size]);
 	ft_printf("\033[0m\n%C ",  L'▶');
@@ -76,7 +76,8 @@ int				main(int argc, char **argv, char **envp)
 {
 	pid_t	process;
 	char	*line;
-	char	*commands;
+	char	**multi;
+	int		index;
 
 	argc = 1;
 	envp = ft_tabdup(envp, NULL);
@@ -90,25 +91,28 @@ int				main(int argc, char **argv, char **envp)
 		//ioctl(0, TIOCSTI, "l");
 		if ((argc = ft_getline(0, &line)) >= 0)
 		{
-			(void)ft_get_commands(line);
-			commands = ft_strepur(line);
-			argv = ft_strsplit(commands, ' ');
-			if (ft_builtins(argv[0], argv, &envp))
+			index = 0;
+			multi = ft_strsplit(line, ';');
+			while (multi[index])
 			{
-				process = fork();
-				if (!process)
+				argv = ft_get_commands(multi[index++]);
+				if (ft_builtins(argv[0], argv, &envp))
 				{
-					if (!ft_find_command(argv[0], argv, envp))
-						ft_printf("0sh: Command not found: %s\n", argv[0]);
+					process = fork();
+					if (!process)
+					{
+						if (!ft_find_command(argv[0], argv, envp))
+							ft_printf("0sh: Command not found: %s\n", argv[0]);
+					}
+					if (process > 0)
+						wait(NULL);
+					if (!process)
+						exit(1);
 				}
-				if (process > 0)
-					wait(NULL);
-				if (!process)
-					exit(1);
+				ft_tabdel(&argv);
 			}
-			ft_tabdel(&argv);
+			ft_tabdel(&multi);
 			ft_strdel(&line);
-			ft_strdel(&commands);
 		}
 	}
 }

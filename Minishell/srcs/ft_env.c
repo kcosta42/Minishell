@@ -6,7 +6,7 @@
 /*   By: kcosta <kcosta@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/12/07 16:57:32 by kcosta            #+#    #+#             */
-/*   Updated: 2016/12/10 09:19:26 by kcosta           ###   ########.fr       */
+/*   Updated: 2016/12/11 11:09:36 by kcosta           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,7 +61,7 @@ int			ft_setenv(char **argv, char ***envp)
 		return (ft_env(argv, *envp));
 	if (ft_tablen(argv) > 3)
 		return (ft_printf("setenv: Too many arguments.\n"));
-	if (ft_strisalnum(argv[1]))
+	if (ft_strisalnum(argv[1]) && ft_isalpha(argv[1][0]))
 		var = ft_strjoin(argv[1], "=");
 	else
 		return (ft_printf("setenv: Variable name incorrect.\n"));
