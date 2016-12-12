@@ -6,7 +6,7 @@
 #*   By: kcosta <kcosta@student.42.fr>              +#+  +:+       +#+        *#
 #*                                                +#+#+#+#+#+   +#+           *#
 #*   Created: 2016/12/02 14:01:12 by kcosta            #+#    #+#             *#
-#*   Updated: 2016/12/10 16:48:51 by kcosta           ###   ########.fr       *#
+#*   Updated: 2016/12/12 19:29:24 by kcosta           ###   ########.fr       *#
 #*                                                                            *#
 #* ************************************************************************** *#
 
@@ -26,7 +26,10 @@ LIBFT = libft/
 LIB = -L $(LIBFT) -lft
 INCLUDES = -I includes/ -I libft/includes/
 SRCS_PATH = srcs/
-FILES = minishell.c \
+FILES = ft_shell.c \
+		ft_mode.c \
+		ft_key_arrows.c \
+		ft_key_controls.c \
 		ft_commands.c \
 		ft_builtins.c \
 		ft_env.c \

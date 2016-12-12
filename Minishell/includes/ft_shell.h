@@ -6,7 +6,7 @@
 /*   By: kcosta <kcosta@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/12/07 16:17:30 by kcosta            #+#    #+#             */
-/*   Updated: 2016/12/10 16:49:52 by kcosta           ###   ########.fr       */
+/*   Updated: 2016/12/12 19:30:00 by kcosta           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,12 +18,15 @@
 # include <stdlib.h>
 # include <fcntl.h>
 # include <signal.h>
+
 # include <sys/types.h>
 # include <sys/stat.h>
 
-# include "libft.h"
+extern pid_t	g_process;
 
 typedef void	(*t_sig)(int);
+
+int		ft_check_input(void);
 
 char	**ft_get_commands(const char *line);
 int		ft_builtins(const char *path, char **argv, char ***envp);

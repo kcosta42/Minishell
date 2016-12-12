@@ -1,18 +1,19 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   minishell.c                                        :+:      :+:    :+:   */
+/*   ft_shell.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: kcosta <kcosta@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/12/07 12:43:07 by kcosta            #+#    #+#             */
-/*   Updated: 2016/12/11 14:32:07 by kcosta           ###   ########.fr       */
+/*   Updated: 2016/12/12 19:35:25 by kcosta           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 #include "ft_shell.h"
-#include <sys/ioctl.h>
+
+pid_t	g_process;
 
 static void		ft_display_prompt(char **envp)
 {
@@ -21,13 +22,12 @@ static void		ft_display_prompt(char **envp)
 	char		**path;
 	int			size;
 
-	if (envp)
-		if ((tmp = ft_tabstr(envp, "PWD=")))
-		{
-			if (pwd)
-				ft_strdel(&pwd);
-			pwd = ft_strdup(*tmp + 4);
-		}
+	if (envp && (tmp = ft_tabstr(envp, "PWD=")))
+	{
+		if (pwd)
+			ft_strdel(&pwd);
+		pwd = ft_strdup(*tmp + 4);
+	}
 	path = ft_path_split(pwd);
 	size = ft_tablen(path) - 1;
 	ft_printf("\n\033[1;34m");
@@ -36,16 +36,21 @@ static void		ft_display_prompt(char **envp)
 	if (size >= 1 && ft_strcmp(path[size - 1], "/"))
 		ft_printf("%s/", path[size - 1]);
 	ft_printf("%s", path[size]);
-	ft_printf("\033[0m\n%C ",  L'▶');
+	ft_printf("\033[0m\n%C ", L'▶');
 	ft_tabdel(&path);
 }
 
 static void		sig_handler(int signal)
 {
 	(void)signal;
+	if (g_process != 0)
+	{
+		kill(g_process, SIGKILL);
+		ft_putchar('\n');
+		return ;
+	}
 	ft_putchar('\n');
 	ft_display_prompt(NULL);
-	return ;
 }
 
 static int		ft_find_command(char *command, char **argv, char **envp)
@@ -74,7 +79,6 @@ static int		ft_find_command(char *command, char **argv, char **envp)
 
 int				main(int argc, char **argv, char **envp)
 {
-	pid_t	process;
 	char	*line;
 	char	**multi;
 	int		index;
@@ -82,13 +86,14 @@ int				main(int argc, char **argv, char **envp)
 	argc = 1;
 	envp = ft_tabdup(envp, NULL);
 	ft_cd(argv, &envp, 1);
+	signal(SIGINT, sig_handler);
 	while (42)
 	{
+		g_process = 0;
 		if (argc == 0)
 			exit(1);
 		ft_display_prompt(envp);
-		signal(SIGINT, sig_handler);
-		//ioctl(0, TIOCSTI, "l");
+		ft_check_input();
 		if ((argc = ft_getline(0, &line)) >= 0)
 		{
 			index = 0;
@@ -98,15 +103,15 @@ int				main(int argc, char **argv, char **envp)
 				argv = ft_get_commands(multi[index++]);
 				if (ft_builtins(argv[0], argv, &envp))
 				{
-					process = fork();
-					if (!process)
+					g_process = fork();
+					if (!g_process)
 					{
 						if (!ft_find_command(argv[0], argv, envp))
 							ft_printf("0sh: Command not found: %s\n", argv[0]);
 					}
-					if (process > 0)
+					if (g_process > 0)
 						wait(NULL);
-					if (!process)
+					if (!g_process)
 						exit(1);
 				}
 				ft_tabdel(&argv);
