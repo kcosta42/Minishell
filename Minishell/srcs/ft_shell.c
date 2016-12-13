@@ -6,7 +6,7 @@
 /*   By: kcosta <kcosta@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/12/07 12:43:07 by kcosta            #+#    #+#             */
-/*   Updated: 2016/12/12 19:35:25 by kcosta           ###   ########.fr       */
+/*   Updated: 2016/12/13 18:37:40 by kcosta           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,9 +40,12 @@ static void		ft_display_prompt(char **envp)
 	ft_tabdel(&path);
 }
 
+void	ft_default_mode(void);
+
 static void		sig_handler(int signal)
 {
 	(void)signal;
+	ft_default_mode();
 	if (g_process != 0)
 	{
 		kill(g_process, SIGKILL);
@@ -77,11 +80,14 @@ static int		ft_find_command(char *command, char **argv, char **envp)
 	return (0);
 }
 
+char	**get_input(void);
+
 int				main(int argc, char **argv, char **envp)
 {
-	char	*line;
+//	char	*line;
 	char	**multi;
 	int		index;
+	size_t	col;
 
 	argc = 1;
 	envp = ft_tabdup(envp, NULL);
@@ -89,15 +95,18 @@ int				main(int argc, char **argv, char **envp)
 	signal(SIGINT, sig_handler);
 	while (42)
 	{
+		col = 0;
 		g_process = 0;
-		if (argc == 0)
+		if (argc == -1)
 			exit(1);
 		ft_display_prompt(envp);
-		ft_check_input();
-		if ((argc = ft_getline(0, &line)) >= 0)
-		{
+		while ((argc = ft_check_input(&col)) > 0)
+			;
+		//if ((argc = ft_getline(0, &line)) >= 0)
+		//{
 			index = 0;
-			multi = ft_strsplit(line, ';');
+			multi = ft_strsplit(*get_input(), ';');
+		//	multi = ft_strsplit(line, ';');
 			while (multi[index])
 			{
 				argv = ft_get_commands(multi[index++]);
@@ -117,7 +126,7 @@ int				main(int argc, char **argv, char **envp)
 				ft_tabdel(&argv);
 			}
 			ft_tabdel(&multi);
-			ft_strdel(&line);
-		}
+			ft_strdel(get_input());
+		//}
 	}
 }

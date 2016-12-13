@@ -6,7 +6,7 @@
 /*   By: kcosta <kcosta@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/12/12 19:18:52 by kcosta            #+#    #+#             */
-/*   Updated: 2016/12/12 19:25:36 by kcosta           ###   ########.fr       */
+/*   Updated: 2016/12/13 16:03:46 by kcosta           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,7 @@
 
 # include "libft.h"
 
+char		ft_key_isreturn(const char *pressed);
 char		ft_key_istab(const char *pressed);
 char		ft_key_isenter(const char *pressed);
 char		ft_key_isctrl_d(const char *pressed);
