@@ -6,7 +6,7 @@
 #*   By: kcosta <kcosta@student.42.fr>              +#+  +:+       +#+        *#
 #*                                                +#+#+#+#+#+   +#+           *#
 #*   Created: 2016/12/02 14:01:12 by kcosta            #+#    #+#             *#
-#*   Updated: 2016/12/12 19:29:24 by kcosta           ###   ########.fr       *#
+#*   Updated: 2016/12/14 19:20:33 by kcosta           ###   ########.fr       *#
 #*                                                                            *#
 #* ************************************************************************** *#
 
@@ -28,8 +28,10 @@ INCLUDES = -I includes/ -I libft/includes/
 SRCS_PATH = srcs/
 FILES = ft_shell.c \
 		ft_mode.c \
+		ft_input.c \
 		ft_key_arrows.c \
 		ft_key_controls.c \
+		ft_completion.c \
 		ft_commands.c \
 		ft_builtins.c \
 		ft_env.c \

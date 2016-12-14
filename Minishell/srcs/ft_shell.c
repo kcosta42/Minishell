@@ -6,12 +6,13 @@
 /*   By: kcosta <kcosta@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/12/07 12:43:07 by kcosta            #+#    #+#             */
-/*   Updated: 2016/12/13 18:37:40 by kcosta           ###   ########.fr       */
+/*   Updated: 2016/12/14 20:02:48 by kcosta           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 #include "ft_shell.h"
+#include "ft_keys.h"
 
 pid_t	g_process;
 
@@ -40,8 +41,6 @@ static void		ft_display_prompt(char **envp)
 	ft_tabdel(&path);
 }
 
-void	ft_default_mode(void);
-
 static void		sig_handler(int signal)
 {
 	(void)signal;
@@ -52,7 +51,6 @@ static void		sig_handler(int signal)
 		ft_putchar('\n');
 		return ;
 	}
-	ft_putchar('\n');
 	ft_display_prompt(NULL);
 }
 
@@ -75,16 +73,17 @@ static int		ft_find_command(char *command, char **argv, char **envp)
 			if (access(new, X_OK) == -1)
 				return (ft_printf("%s: Permission denied.\n", command));
 		execve(new, argv, envp);
+		ft_strdel(&tmp);
+		ft_strdel(&new);
 		i++;
 	}
+	paths[0] = paths[0] - 5;
+	ft_tabdel(&paths);
 	return (0);
 }
 
-char	**get_input(void);
-
 int				main(int argc, char **argv, char **envp)
 {
-//	char	*line;
 	char	**multi;
 	int		index;
 	size_t	col;
@@ -100,33 +99,29 @@ int				main(int argc, char **argv, char **envp)
 		if (argc == -1)
 			exit(1);
 		ft_display_prompt(envp);
-		while ((argc = ft_check_input(&col)) > 0)
+		while ((argc = ft_check_input(envp, &col)) > 0)
 			;
-		//if ((argc = ft_getline(0, &line)) >= 0)
-		//{
-			index = 0;
-			multi = ft_strsplit(*get_input(), ';');
-		//	multi = ft_strsplit(line, ';');
-			while (multi[index])
+		index = 0;
+		multi = ft_strsplit(*ft_get_input(), ';');
+		while (multi[index])
+		{
+			argv = ft_get_commands(multi[index++]);
+			if (ft_builtins(argv[0], argv, &envp))
 			{
-				argv = ft_get_commands(multi[index++]);
-				if (ft_builtins(argv[0], argv, &envp))
+				g_process = fork();
+				if (!g_process)
 				{
-					g_process = fork();
-					if (!g_process)
-					{
-						if (!ft_find_command(argv[0], argv, envp))
-							ft_printf("0sh: Command not found: %s\n", argv[0]);
-					}
-					if (g_process > 0)
-						wait(NULL);
-					if (!g_process)
-						exit(1);
+					if (!ft_find_command(argv[0], argv, envp))
+						ft_printf("0sh: Command not found: %s\n", argv[0]);
 				}
-				ft_tabdel(&argv);
+				if (g_process > 0)
+					wait(NULL);
+				if (!g_process)
+					exit(1);
 			}
-			ft_tabdel(&multi);
-			ft_strdel(get_input());
-		//}
+			ft_tabdel(&argv);
+		}
+		ft_tabdel(&multi);
+		ft_strdel(ft_get_input());
 	}
 }

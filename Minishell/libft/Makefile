@@ -6,7 +6,7 @@
 #*   By: kcosta <kcosta@student.42.fr>              +#+  +:+       +#+        *#
 #*                                                +#+#+#+#+#+   +#+           *#
 #*   Created: 2016/11/02 10:00:00 by kcosta            #+#    #+#             *#
-#*   Updated: 2016/12/09 12:05:37 by kcosta           ###   ########.fr       *#
+#*   Updated: 2016/12/14 15:55:54 by kcosta           ###   ########.fr       *#
 #*                                                                            *#
 #* ************************************************************************** *#
 
@@ -40,6 +40,8 @@ FILES =	string/ft_strcat.c \
 		string/ft_strcpy.c \
 		string/ft_strequ.c \
 		string/ft_striter.c \
+		string/ft_strinsert.c \
+		string/ft_strremove.c \
 		string/ft_strdup.c \
 		string/ft_strlen.c \
 		string/ft_striteri.c \

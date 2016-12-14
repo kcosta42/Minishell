@@ -6,45 +6,50 @@
 /*   By: kcosta <kcosta@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/12/12 19:22:59 by kcosta            #+#    #+#             */
-/*   Updated: 2016/12/13 11:54:07 by kcosta           ###   ########.fr       */
+/*   Updated: 2016/12/14 17:21:33 by kcosta           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 #include "ft_keys.h"
 
-char		ft_key_isup(const char *pressed)
+static char		ft_key_isup(char key)
 {
-	const char	*key = "\x1b\x5b\x41\0\0\0";
-
-	if (!memcmp((void*)key, (void*)pressed, MAX_LENGTH))
-		return (1);
-	return (0);
+	return (key == '\x41');
 }
 
-char		ft_key_isdown(const char *pressed)
+static char		ft_key_isdown(char key)
 {
-	const char	*key = "\x1b\x5b\x42\0\0\0";
-
-	if (!memcmp((void*)key, (void*)pressed, MAX_LENGTH))
-		return (1);
-	return (0);
+	return (key == '\x42');
 }
 
-char		ft_key_isright(const char *pressed)
+static char		ft_key_isright(char key)
 {
-	const char	*key = "\x1b\x5b\x43\0\0\0";
-
-	if (!memcmp((void*)key, (void*)pressed, MAX_LENGTH))
-		return (1);
-	return (0);
+	return (key == '\x43');
 }
 
-char		ft_key_isleft(const char *pressed)
+static char		ft_key_isleft(char key)
 {
-	const char	*key = "\x1b\x5b\x44\0\0\0";
+	return (key == '\x44');
+}
 
-	if (!memcmp((void*)key, (void*)pressed, MAX_LENGTH))
-		return (1);
-	return (0);
+int				ft_key_isarrow(char key)
+{
+	if (key == '\x1b')
+	{
+		read(0, &key, 1);
+		if (key == '\x5b')
+		{
+			read(0, &key, 1);
+			if (ft_key_isup(key))
+				return (K_UP);
+			if (ft_key_isdown(key))
+				return (K_DOWN);
+			if (ft_key_isright(key))
+				return (K_RIGHT);
+			if (ft_key_isleft(key))
+				return (K_LEFT);
+		}
+	}
+	return (K_NONE);
 }

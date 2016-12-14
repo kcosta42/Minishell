@@ -6,7 +6,7 @@
 /*   By: kcosta <kcosta@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/12/07 16:17:30 by kcosta            #+#    #+#             */
-/*   Updated: 2016/12/13 18:37:48 by kcosta           ###   ########.fr       */
+/*   Updated: 2016/12/14 19:37:14 by kcosta           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ extern pid_t	g_process;
 
 typedef void	(*t_sig)(int);
 
-int		ft_check_input(size_t *col);
+int		ft_check_input(char **envp, size_t *col);
 
 char	**ft_get_commands(const char *line);
 int		ft_builtins(const char *path, char **argv, char ***envp);

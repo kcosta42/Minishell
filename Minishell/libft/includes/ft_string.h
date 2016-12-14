@@ -6,7 +6,7 @@
 /*   By: kcosta <kcosta@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/11/30 14:57:13 by kcosta            #+#    #+#             */
-/*   Updated: 2016/12/09 12:05:00 by kcosta           ###   ########.fr       */
+/*   Updated: 2016/12/14 17:21:35 by kcosta           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,8 @@ int		ft_strnequ(const char *s1, const char *s2, size_t n);
 
 char	*ft_strnew(size_t size);
 char	*ft_strdup(const char *s1);
+char	*ft_strinsert(char **str, char c, size_t index);
+char	*ft_strremove(char **str, size_t index);
 char	*ft_strsub(const char *s, unsigned int start, size_t len);
 char	*ft_strjoin(const char *s1, const char *s2);
 void	ft_strclr(char *s);

@@ -6,45 +6,42 @@
 /*   By: kcosta <kcosta@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/12/12 19:23:54 by kcosta            #+#    #+#             */
-/*   Updated: 2016/12/13 16:10:18 by kcosta           ###   ########.fr       */
+/*   Updated: 2016/12/14 17:21:29 by kcosta           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 #include "ft_keys.h"
 
-char		ft_key_isreturn(const char *pressed)
+static char		ft_key_isback(char key)
 {
-	const char	*key = "\x7f\0\0\0\0\0";
-
-	if (!memcmp((void*)key, (void*)pressed, MAX_LENGTH))
-		return (1);
-	return (0);
+	return (key == '\x7f');
 }
 
-char		ft_key_istab(const char *pressed)
+static char		ft_key_istab(char key)
 {
-	const char	*key = "\x9\0\0\0\0\0";
-
-	if (!memcmp((void*)key, (void*)pressed, MAX_LENGTH))
-		return (1);
-	return (0);
+	return (key == '\x9');
 }
 
-char		ft_key_isenter(const char *pressed)
+static char		ft_key_isreturn(char key)
 {
-	const char	*key = "\xa\0\0\0\0\0";
-
-	if (!memcmp((void*)key, (void*)pressed, MAX_LENGTH))
-		return (1);
-	return (0);
+	return (key == '\xa');
 }
 
-char		ft_key_isctrl_d(const char *pressed)
+static char		ft_key_isctrl_d(char key)
 {
-	const char	*key = "\x4\0\0\0\0\0";
+	return (key == '\x4');
+}
 
-	if (!memcmp((void*)key, (void*)pressed, MAX_LENGTH))
-		return (1);
-	return (0);
+int				ft_key_iscontrol(char key)
+{
+	if (ft_key_isback(key))
+		return (K_BACK);
+	if (ft_key_istab(key))
+		return (K_TAB);
+	if (ft_key_isreturn(key))
+		return (K_RETURN);
+	if (ft_key_isctrl_d(key))
+		return (K_CTRL_D);
+	return (K_NONE);
 }
