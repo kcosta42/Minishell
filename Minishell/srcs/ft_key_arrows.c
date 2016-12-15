@@ -6,34 +6,52 @@
 /*   By: kcosta <kcosta@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/12/12 19:22:59 by kcosta            #+#    #+#             */
-/*   Updated: 2016/12/14 17:21:33 by kcosta           ###   ########.fr       */
+/*   Updated: 2016/12/15 17:45:58 by kcosta           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 #include "ft_keys.h"
+#include "ft_singletons.h"
+#include "ft_history.h"
 
-static char		ft_key_isup(char key)
+int		ft_key_up(char **envp, size_t *col)
 {
-	return (key == '\x41');
+	(void)envp;
+	ft_seek_history(1, col);
+	return (1);
 }
 
-static char		ft_key_isdown(char key)
+int		ft_key_down(char **envp, size_t *col)
 {
-	return (key == '\x42');
+	(void)envp;
+	ft_seek_history(0, col);
+	return (1);
 }
 
-static char		ft_key_isright(char key)
+int		ft_key_right(char **envp, size_t *col)
 {
-	return (key == '\x43');
+	(void)envp;
+	if (*col < ft_strlen(*ft_get_input()))
+	{
+		(*col)++;
+		ft_printf("\033[1C");
+	}
+	return (1);
 }
 
-static char		ft_key_isleft(char key)
+int		ft_key_left(char **envp, size_t *col)
 {
-	return (key == '\x44');
+	(void)envp;
+	if (*col > 0)
+	{
+		ft_printf("\033[1D");
+		(*col)--;
+	}
+	return (1);
 }
 
-int				ft_key_isarrow(char key)
+int		ft_key_isarrow(char key)
 {
 	if (key == '\x1b')
 	{
@@ -41,13 +59,13 @@ int				ft_key_isarrow(char key)
 		if (key == '\x5b')
 		{
 			read(0, &key, 1);
-			if (ft_key_isup(key))
+			if (key == '\x41')
 				return (K_UP);
-			if (ft_key_isdown(key))
+			if (key == '\x42')
 				return (K_DOWN);
-			if (ft_key_isright(key))
+			if (key == '\x43')
 				return (K_RIGHT);
-			if (ft_key_isleft(key))
+			if (key == '\x44')
 				return (K_LEFT);
 		}
 	}

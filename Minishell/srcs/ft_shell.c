@@ -6,13 +6,15 @@
 /*   By: kcosta <kcosta@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/12/07 12:43:07 by kcosta            #+#    #+#             */
-/*   Updated: 2016/12/14 20:02:48 by kcosta           ###   ########.fr       */
+/*   Updated: 2016/12/15 18:08:50 by kcosta           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 #include "ft_shell.h"
 #include "ft_keys.h"
+#include "ft_singletons.h"
+#include "ft_history.h"
 
 pid_t	g_process;
 
@@ -101,6 +103,7 @@ int				main(int argc, char **argv, char **envp)
 		ft_display_prompt(envp);
 		while ((argc = ft_check_input(envp, &col)) > 0)
 			;
+		ft_add_history(*ft_get_input());
 		index = 0;
 		multi = ft_strsplit(*ft_get_input(), ';');
 		while (multi[index])

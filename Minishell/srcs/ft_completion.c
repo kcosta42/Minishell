@@ -6,14 +6,15 @@
 /*   By: kcosta <kcosta@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/12/13 19:09:47 by kcosta            #+#    #+#             */
-/*   Updated: 2016/12/14 19:52:44 by kcosta           ###   ########.fr       */
+/*   Updated: 2016/12/15 17:07:27 by kcosta           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 #include "ft_keys.h"
+#include "ft_singletons.h"
 
-static int		ft_match(char *s1, char *s2)
+int				ft_match(char *s1, char *s2)
 {
 	if (!s1 || !s2)
 		return (0);
@@ -22,14 +23,14 @@ static int		ft_match(char *s1, char *s2)
 	else if (*s2 == '*')
 	{
 		if (*s1 == 0)
-			return ft_match(s1, s2 + 1);
+			return (ft_match(s1, s2 + 1));
 		else
 			return (ft_match(s1 + 1, s2) || ft_match(s1, s2 + 1));
 	}
 	else
 	{
 		if (*s1 == *s2)
-			return ft_match(s1 + 1, s2 + 1);
+			return (ft_match(s1 + 1, s2 + 1));
 		else
 			return (0);
 	}
@@ -44,16 +45,14 @@ static char		*ft_get_name(const char *name, size_t len)
 	return (ft_strncpy(new, name, len));
 }
 
-static char		*ft_com_dir(char **envp, const char *current)
+char			*ft_find_match(const char *dir, const char *current)
 {
 	DIR				*dirp;
 	struct dirent	*entry;
 	char			*wannabe;
 
-	(void)envp;
-	if (!(dirp = opendir(".")))
+	if (!(dirp = opendir(dir)))
 		return (NULL);
-	entry = readdir(dirp);
 	wannabe = NULL;
 	while (ft_match(wannabe, (char*)current) != 1)
 	{
@@ -61,50 +60,58 @@ static char		*ft_com_dir(char **envp, const char *current)
 			ft_strdel(&wannabe);
 		if (!(entry = readdir(dirp)))
 			break ;
-		wannabe = ft_get_name(entry->d_name, entry->d_namlen);
+		if (entry->d_name[0] != '.')
+			wannabe = ft_get_name(entry->d_name, entry->d_namlen);
 	}
 	if (closedir(dirp) == -1)
 		return (NULL);
 	return (wannabe);
 }
 
-char		*ft_com_path(char **envp, const char *current)
+static int		ft_com_update(char *wannabe)
 {
-	DIR				*dirp;
-	struct dirent	*entry;
-	char			*wannabe;
-	
-	(void)envp;
-	if (!(dirp = opendir(".")))
-		return (NULL);
-	entry = readdir(dirp);
-	wannabe = NULL;
-	while (ft_match(wannabe, (char*)current) != 1)
+	char	**input;
+	char	*tmp;
+	char	*new;
+
+	if (!wannabe)
+		return (-1);
+	input = ft_get_input();
+	if (ft_strrchr(*input, ' '))
 	{
-		if (wannabe)
-			ft_strdel(&wannabe);
-		if (!(entry = readdir(dirp)))
-			break ;
-		wannabe = ft_get_name(entry->d_name, entry->d_namlen);
+		tmp = ft_strnew(ft_strrchr(*input, ' ') - *input + 1);
+		tmp = ft_strncpy(tmp, *input, ft_strrchr(*input, ' ') - *input + 1);
+		new = ft_strjoin(tmp, wannabe);
+		ft_strdel(&tmp);
+		ft_strdel(input);
+		ft_strdel(&wannabe);
+		*input = new;
+		return (0);
 	}
-	if (closedir(dirp) == -1)
-		return (NULL);
-	return (wannabe);
+	ft_strdel(input);
+	*input = wannabe;
+	return (1);
 }
 
 int				ft_completion(char **envp, size_t *col)
 {
-	char	**input;
+	char	*tmp;
 	char	*current;
 	char	*wannabe;
 
-	(void)envp;
-	current = ft_strjoin(*ft_get_input(), "*");
-	input = ft_get_input();
-	wannabe = ft_com_dir(envp, current);
-	*input = (wannabe) ? wannabe : *input;
+	tmp = (!ft_strrchr(*ft_get_input(), ' ')) ? *ft_get_input() :
+										ft_strrchr(*ft_get_input(), ' ') + 1;
+	current = ft_strjoin(tmp, "*");
+	if (!ft_strcmp(current, "*"))
+		return (1);
+	if (!ft_strncmp(*ft_get_input(), "cd", 2))
+		wannabe = ft_com_dir(current);
+	else if (!(wannabe = ft_com_builtins(current)))
+		if (!(wannabe = ft_com_path(envp, current)))
+			wannabe = ft_com_dir(current);
+	ft_com_update(wannabe);
 	ft_show_input(col);
-	*col = ft_strlen(*input);
+	*col = ft_strlen(*ft_get_input());
 	ft_strdel(&current);
 	return (0);
 }

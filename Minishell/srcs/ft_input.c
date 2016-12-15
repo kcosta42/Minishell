@@ -6,21 +6,13 @@
 /*   By: kcosta <kcosta@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/12/14 16:34:58 by kcosta            #+#    #+#             */
-/*   Updated: 2016/12/14 19:19:58 by kcosta           ###   ########.fr       */
+/*   Updated: 2016/12/15 16:59:30 by kcosta           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 #include "ft_keys.h"
-
-char	**ft_get_input(void)
-{
-	static char	*input = NULL;
-
-	if (input == NULL)
-		input = ft_strnew(0);
-	return (&input);
-}
+#include "ft_singletons.h"
 
 int		ft_add_input(char c, size_t *col)
 {
@@ -43,10 +35,12 @@ int		ft_show_input(size_t *col)
 int		ft_remove_input(size_t *col)
 {
 	size_t	size;
+	int		i;
 
+	i = 0;
 	size = ft_strlen(*ft_get_input());
 	ft_printf("\033[%dD", (*col) ? *col : -1);
-	for (int i = 0; i < (int)size + (*col == 1); i++)
+	while (i++ < (int)size + (*col == 1))
 		ft_putchar(' ');
 	ft_printf("\033[%dD", size + (*col == 1));
 	ft_strremove(ft_get_input(), *col);

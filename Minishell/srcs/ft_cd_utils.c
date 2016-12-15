@@ -6,17 +6,22 @@
 /*   By: kcosta <kcosta@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/12/09 19:09:24 by kcosta            #+#    #+#             */
-/*   Updated: 2016/12/11 11:32:35 by kcosta           ###   ########.fr       */
+/*   Updated: 2016/12/15 17:08:32 by kcosta           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 #include "ft_shell.h"
+#include "ft_singletons.h"
 
 int			ft_cd_initialise(char **home, char **pwd,
 												char **old_pwd, char **envp)
 {
+	char	**s_home;
+
 	*home = ft_strdup(*ft_tabstr(envp, "HOME=") + 5);
+	s_home = ft_get_home();
+	*s_home = *home;
 	*pwd = ft_strdup(*ft_tabstr(envp, "PWD=") + 4);
 	*old_pwd = ft_strdup(*ft_tabstr(envp, "HOME=") + 5);
 	return (0);

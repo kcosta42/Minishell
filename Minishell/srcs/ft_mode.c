@@ -6,7 +6,7 @@
 /*   By: kcosta <kcosta@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/12/12 10:06:43 by kcosta            #+#    #+#             */
-/*   Updated: 2016/12/14 19:36:38 by kcosta           ###   ########.fr       */
+/*   Updated: 2016/12/15 15:50:34 by kcosta           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,52 +50,24 @@ static int		ft_get_char(size_t *col)
 	return (key);
 }
 
-int			ft_check_input(char **envp, size_t *col)
+int				ft_check_input(char **envp, size_t *col)
 {
-	int		key;
+	int				key;
+	int				i;
+	static t_keys	key_funcs[9];
 
-	while (1)
+	ft_memcpy(key_funcs, ((t_keys[9])
+	{{K_CTRL_D, &ft_key_ctrl_d}, {K_RETURN, &ft_key_return},
+	{K_TAB, &ft_key_tab}, {K_BACK, &ft_key_back}, {K_RIGHT, ft_key_right},
+	{K_UP, &ft_key_up}, {K_DOWN, &ft_key_down}, {K_LEFT, &ft_key_left},
+	{K_NONE, NULL}, }), sizeof(t_keys[9]));
+	i = 0;
+	key = ft_get_char(col);
+	while (key_funcs[i].func != NULL)
 	{
-		key = ft_get_char(col);
-		if (key == K_TAB)
-		{
-			ft_completion(envp, col);
-			return (1);
-		}
-		else if (key == K_BACK)
-		{
-			if (*col > 0)
-				ft_remove_input(col);
-		}
-		else if (key == K_LEFT)
-		{
-			if (*col > 0)
-			{
-				ft_printf("\033[1D");
-				(*col)--;
-			}
-		}
-		else if (key == K_RIGHT)
-		{
-			if (*col < ft_strlen(*ft_get_input()))
-			{
-				(*col)++;
-				ft_printf("\033[1C");
-			}
-		}
-		else if (key == K_UP)
-			;
-		else if (key == K_DOWN)
-			;
-		else if (key == K_CTRL_D)
-		{
-			ft_default_mode();
-			return (-1);
-		}
-		else if (key == K_RETURN)
-		{
-			ft_default_mode();
-			return (0);
-		}
+		if (key_funcs[i].key == key)
+			return (key_funcs[i].func(envp, col));
+		i++;
 	}
+	return (1);
 }

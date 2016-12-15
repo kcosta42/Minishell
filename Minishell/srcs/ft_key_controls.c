@@ -6,42 +6,52 @@
 /*   By: kcosta <kcosta@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/12/12 19:23:54 by kcosta            #+#    #+#             */
-/*   Updated: 2016/12/14 17:21:29 by kcosta           ###   ########.fr       */
+/*   Updated: 2016/12/15 15:50:39 by kcosta           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 #include "ft_keys.h"
 
-static char		ft_key_isback(char key)
+int		ft_key_back(char **envp, size_t *col)
 {
-	return (key == '\x7f');
+	(void)envp;
+	if (*col > 0)
+		ft_remove_input(col);
+	return (1);
 }
 
-static char		ft_key_istab(char key)
+int		ft_key_tab(char **envp, size_t *col)
 {
-	return (key == '\x9');
+	ft_completion(envp, col);
+	return (1);
 }
 
-static char		ft_key_isreturn(char key)
+int		ft_key_return(char **envp, size_t *col)
 {
-	return (key == '\xa');
+	(void)envp;
+	(void)col;
+	ft_default_mode();
+	return (0);
 }
 
-static char		ft_key_isctrl_d(char key)
+int		ft_key_ctrl_d(char **envp, size_t *col)
 {
-	return (key == '\x4');
+	(void)envp;
+	(void)col;
+	ft_default_mode();
+	return (-1);
 }
 
-int				ft_key_iscontrol(char key)
+int		ft_key_iscontrol(char key)
 {
-	if (ft_key_isback(key))
+	if (key == '\x7f')
 		return (K_BACK);
-	if (ft_key_istab(key))
+	if (key == '\x9')
 		return (K_TAB);
-	if (ft_key_isreturn(key))
+	if (key == '\xa')
 		return (K_RETURN);
-	if (ft_key_isctrl_d(key))
+	if (key == '\x4')
 		return (K_CTRL_D);
 	return (K_NONE);
 }
