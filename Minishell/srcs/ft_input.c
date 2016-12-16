@@ -6,7 +6,7 @@
 /*   By: kcosta <kcosta@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/12/14 16:34:58 by kcosta            #+#    #+#             */
-/*   Updated: 2016/12/15 16:59:30 by kcosta           ###   ########.fr       */
+/*   Updated: 2016/12/16 16:48:30 by kcosta           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ int		ft_show_input(size_t *col)
 	return (0);
 }
 
-int		ft_remove_input(size_t *col)
+int		ft_clear_input(size_t *col)
 {
 	size_t	size;
 	int		i;
@@ -43,6 +43,15 @@ int		ft_remove_input(size_t *col)
 	while (i++ < (int)size + (*col == 1))
 		ft_putchar(' ');
 	ft_printf("\033[%dD", size + (*col == 1));
+	return (0);
+}
+
+int		ft_remove_input(size_t *col)
+{
+	size_t	size;
+
+	size = ft_strlen(*ft_get_input());
+	ft_clear_input(col);
 	ft_strremove(ft_get_input(), *col);
 	ft_printf("%s", *ft_get_input());
 	(*col)--;

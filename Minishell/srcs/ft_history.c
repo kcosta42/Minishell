@@ -6,7 +6,7 @@
 /*   By: kcosta <kcosta@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/12/15 16:59:39 by kcosta            #+#    #+#             */
-/*   Updated: 2016/12/15 19:03:58 by kcosta           ###   ########.fr       */
+/*   Updated: 2016/12/16 16:56:24 by kcosta           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,22 +66,21 @@ int		ft_seek_history(char next, size_t *col)
 	t_list 		*history;
 	int			index;
 	char		**input;
-	size_t		size;
 
 	index = 0;
-	size = ft_strlen(*ft_get_input());
-	ft_printf("\033[%dD", (*col) ? *col : -1);
-	ft_printf("%*c", size, ' ');
-	ft_printf("\033[%dD", size);
+	ft_clear_input(col);
 	history = *ft_get_history();
+	input = ft_get_input();
+	ft_strdel(input);
 	while (history && index++ < current - (!next))
 		history = history->next;
 	if (!history)
+	{
+		ft_printf("\a");
 		return (-1);
+	}
 	current = (next) ? current + 1 : current - 1;
 	current = (current < 0) ? 0 : current;
-	input = ft_get_input();
-	ft_strdel(input);
 	*input = (current) ? ft_strdup(history->content) : ft_strnew(0);
 	ft_show_input(col);
 	*col = ft_strlen(*ft_get_input());

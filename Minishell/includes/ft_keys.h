@@ -6,7 +6,7 @@
 /*   By: kcosta <kcosta@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/12/12 19:18:52 by kcosta            #+#    #+#             */
-/*   Updated: 2016/12/15 17:16:48 by kcosta           ###   ########.fr       */
+/*   Updated: 2016/12/16 16:48:49 by kcosta           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,6 +69,7 @@ int				ft_key_iscontrol(char key);
 int				ft_key_isarrow(char key);
 
 int				ft_add_input(char c, size_t *col);
+int				ft_clear_input(size_t *col);
 int				ft_remove_input(size_t *col);
 int				ft_show_input(size_t *col);
 
