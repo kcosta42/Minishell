@@ -6,7 +6,7 @@
 /*   By: kcosta <kcosta@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/12/15 16:59:39 by kcosta            #+#    #+#             */
-/*   Updated: 2016/12/16 16:56:24 by kcosta           ###   ########.fr       */
+/*   Updated: 2016/12/16 23:46:40 by kcosta           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,19 +32,50 @@ t_list	*ft_initialise_history(void)
 		ft_lstadd(&history, ft_lstnew(line, ft_strlen(line) + 1));
 		ft_strdel(&line);
 	}
+	ft_strdel(&line);
 	ft_strdel(&path);
 	if (close(fd) == -1)
 		return (NULL);
 	return (history);
 }
 
+static int	ft_history_handler(t_list *history, char next)
+{
+	static int	current = 0;
+	int			index;
+	char		**input;
+
+	index = 0;
+	current = (history) ? current : 0;
+	if (!history)
+		return (1);
+	input = ft_get_input();
+	while (history && index++ < current - 2 * (!next))
+		history = history->next;
+	if (history)
+		current = (next) ? current + 1 : current - 1;
+	current = (current < 0) ? 0 : current;
+	if (history || !next)
+		ft_strdel(input);
+	if (!next && !current)
+		*input = ft_strnew(0);
+	else if (history)
+		*input = ft_strdup(history->content);
+	if (!history)
+		return (ft_printf("\a"));
+	return (0);
+}
+
 int		ft_add_history(char *entry)
 {
-	t_list		*history;
+	t_list		**history;
 	int			fd;
 	char		*path;
 
-	history = *ft_get_history();
+	history = ft_get_history();
+	ft_history_handler(NULL, 0);
+	if (*history && !ft_strcmp((*history)->content, entry))
+		return (0);
 	path = ft_strjoin(*ft_get_home(), "/.0sh_history");
 	if ((fd = open(path, O_WRONLY | O_APPEND)) == -1)
 		return (-1);
@@ -53,7 +84,7 @@ int		ft_add_history(char *entry)
 		write(fd, entry, ft_strlen(entry));
 		write(fd, "\n", 1);
 	}
-	ft_lstadd(&history, ft_lstnew(entry, ft_strlen(entry) + 1));
+	ft_lstadd(history, ft_lstnew(entry, ft_strlen(entry) + 1));
 	ft_strdel(&path);
 	if (close(fd) == -1)
 		return (-1);
@@ -62,26 +93,18 @@ int		ft_add_history(char *entry)
 
 int		ft_seek_history(char next, size_t *col)
 {
-	static int	current = 0;
 	t_list 		*history;
-	int			index;
-	char		**input;
+	int			i;
+	size_t		size;
 
-	index = 0;
-	ft_clear_input(col);
+	i = 0;
+	size = ft_strlen(*ft_get_input());
+	ft_printf("\033[%dD", (*col) ? *col : -1);
+	while (i++ < (int)size)
+		ft_putchar(' ');
+	*col = size;
 	history = *ft_get_history();
-	input = ft_get_input();
-	ft_strdel(input);
-	while (history && index++ < current - (!next))
-		history = history->next;
-	if (!history)
-	{
-		ft_printf("\a");
-		return (-1);
-	}
-	current = (next) ? current + 1 : current - 1;
-	current = (current < 0) ? 0 : current;
-	*input = (current) ? ft_strdup(history->content) : ft_strnew(0);
+	ft_history_handler(history, next);
 	ft_show_input(col);
 	*col = ft_strlen(*ft_get_input());
 	return (0);
