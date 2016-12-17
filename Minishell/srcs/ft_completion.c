@@ -6,7 +6,7 @@
 /*   By: kcosta <kcosta@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/12/13 19:09:47 by kcosta            #+#    #+#             */
-/*   Updated: 2016/12/15 17:07:27 by kcosta           ###   ########.fr       */
+/*   Updated: 2016/12/17 12:01:26 by kcosta           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,7 +104,7 @@ int				ft_completion(char **envp, size_t *col)
 	current = ft_strjoin(tmp, "*");
 	if (!ft_strcmp(current, "*"))
 		return (1);
-	if (!ft_strncmp(*ft_get_input(), "cd", 2))
+	if (ft_strrchr(*ft_get_input(), ' '))
 		wannabe = ft_com_dir(current);
 	else if (!(wannabe = ft_com_builtins(current)))
 		if (!(wannabe = ft_com_path(envp, current)))
