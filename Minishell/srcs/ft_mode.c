@@ -6,14 +6,15 @@
 /*   By: kcosta <kcosta@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/12/12 10:06:43 by kcosta            #+#    #+#             */
-/*   Updated: 2016/12/15 15:50:34 by kcosta           ###   ########.fr       */
+/*   Updated: 2016/12/22 15:50:53 by kcosta           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "ft_shell.h"
 #include "libft.h"
 #include "ft_keys.h"
 
-static void		ft_raw_mode(void)
+void			ft_raw_mode(void)
 {
 	struct termios	attr;
 
@@ -41,8 +42,12 @@ static int		ft_get_char(size_t *col)
 	char	c;
 	char	key;
 
-	ft_raw_mode();
 	read(0, &c, 1);
+	if (g_reset)
+	{
+		ioctl(0, TIOCSTI, &c);
+		return (-2);
+	}
 	if ((key = ft_key_iscontrol(c)) == K_NONE)
 		key = ft_key_isarrow(c);
 	if (key == K_NONE)
@@ -63,6 +68,8 @@ int				ft_check_input(char **envp, size_t *col)
 	{K_NONE, NULL}, }), sizeof(t_keys[9]));
 	i = 0;
 	key = ft_get_char(col);
+	if (key == -2)
+		return (-2);
 	while (key_funcs[i].func != NULL)
 	{
 		if (key_funcs[i].key == key)

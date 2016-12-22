@@ -6,7 +6,7 @@
 /*   By: kcosta <kcosta@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/12/07 12:43:07 by kcosta            #+#    #+#             */
-/*   Updated: 2016/12/15 18:08:50 by kcosta           ###   ########.fr       */
+/*   Updated: 2016/12/22 15:54:14 by kcosta           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@
 #include "ft_singletons.h"
 #include "ft_history.h"
 
+int		g_reset;
 pid_t	g_process;
 
 static void		ft_display_prompt(char **envp)
@@ -41,19 +42,7 @@ static void		ft_display_prompt(char **envp)
 	ft_printf("%s", path[size]);
 	ft_printf("\033[0m\n%C ", L'▶');
 	ft_tabdel(&path);
-}
-
-static void		sig_handler(int signal)
-{
-	(void)signal;
-	ft_default_mode();
-	if (g_process != 0)
-	{
-		kill(g_process, SIGKILL);
-		ft_putchar('\n');
-		return ;
-	}
-	ft_display_prompt(NULL);
+	ft_raw_mode();
 }
 
 static int		ft_find_command(char *command, char **argv, char **envp)
@@ -84,47 +73,77 @@ static int		ft_find_command(char *command, char **argv, char **envp)
 	return (0);
 }
 
-int				main(int argc, char **argv, char **envp)
+static void		sig_handler(int signal)
+{
+	char		**input;
+
+	(void)signal;
+	ft_default_mode();
+	input = ft_get_input();
+	ft_strdel(input);
+	g_reset = 1;
+	if (g_process != 0)
+	{
+		kill(g_process, SIGKILL);
+		ft_putchar('\n');
+		return ;
+	}
+	ft_display_prompt(NULL);
+}
+
+static void		ft_command_handler(char **argv, char **envp)
 {
 	char	**multi;
 	int		index;
+
+	index = 0;
+	multi = ft_strsplit(*ft_get_input(), ';');
+	while (multi[index])
+	{
+		argv = ft_get_commands(multi[index++]);
+		if (ft_builtins(argv[0], argv, &envp))
+		{
+			g_process = fork();
+			if (!g_process)
+			{
+				if (!ft_find_command(argv[0], argv, envp))
+					ft_printf("0sh: Command not found: %s\n", argv[0]);
+			}
+			if (g_process > 0)
+				wait(NULL);
+			if (!g_process)
+				exit(1);
+		}
+		ft_tabdel(&argv);
+	}
+	ft_tabdel(&multi);
+	ft_strdel(ft_get_input());
+}
+
+int				main(int argc, char **argv, char **envp)
+{
 	size_t	col;
 
 	argc = 1;
+	g_reset = 0;
 	envp = ft_tabdup(envp, NULL);
 	ft_cd(argv, &envp, 1);
 	signal(SIGINT, sig_handler);
 	while (42)
 	{
-		col = 0;
 		g_process = 0;
 		if (argc == -1)
 			exit(1);
-		ft_display_prompt(envp);
+		col = 0;
+		if (!g_reset)
+			ft_display_prompt(envp);
+		g_reset = 0;
 		while ((argc = ft_check_input(envp, &col)) > 0)
 			;
+		if (argc == -2)
+			continue ;
 		ft_add_history(*ft_get_input());
-		index = 0;
-		multi = ft_strsplit(*ft_get_input(), ';');
-		while (multi[index])
-		{
-			argv = ft_get_commands(multi[index++]);
-			if (ft_builtins(argv[0], argv, &envp))
-			{
-				g_process = fork();
-				if (!g_process)
-				{
-					if (!ft_find_command(argv[0], argv, envp))
-						ft_printf("0sh: Command not found: %s\n", argv[0]);
-				}
-				if (g_process > 0)
-					wait(NULL);
-				if (!g_process)
-					exit(1);
-			}
-			ft_tabdel(&argv);
-		}
-		ft_tabdel(&multi);
-		ft_strdel(ft_get_input());
+		ft_command_handler(argv, envp);
 	}
+	return (0);
 }

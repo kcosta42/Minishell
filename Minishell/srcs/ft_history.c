@@ -6,7 +6,7 @@
 /*   By: kcosta <kcosta@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/12/15 16:59:39 by kcosta            #+#    #+#             */
-/*   Updated: 2016/12/16 23:46:40 by kcosta           ###   ########.fr       */
+/*   Updated: 2016/12/22 11:00:25 by kcosta           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 #include "ft_singletons.h"
 #include "ft_history.h"
 
-t_list	*ft_initialise_history(void)
+t_list		*ft_initialise_history(void)
 {
 	t_list		*history;
 	char		*line;
@@ -66,7 +66,7 @@ static int	ft_history_handler(t_list *history, char next)
 	return (0);
 }
 
-int		ft_add_history(char *entry)
+int			ft_add_history(char *entry)
 {
 	t_list		**history;
 	int			fd;
@@ -91,9 +91,9 @@ int		ft_add_history(char *entry)
 	return (0);
 }
 
-int		ft_seek_history(char next, size_t *col)
+int			ft_seek_history(char next, size_t *col)
 {
-	t_list 		*history;
+	t_list		*history;
 	int			i;
 	size_t		size;
 

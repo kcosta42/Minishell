@@ -6,7 +6,7 @@
 /*   By: kcosta <kcosta@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/12/12 19:18:52 by kcosta            #+#    #+#             */
-/*   Updated: 2016/12/16 16:48:49 by kcosta           ###   ########.fr       */
+/*   Updated: 2016/12/22 14:41:34 by kcosta           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@
 # ifndef KEYS
 #  define KEYS
 
+#  define K_CTRL_C		(-2)
 #  define K_CTRL_D		(-1)
 #  define K_NONE		0
 #  define K_RETURN		1
@@ -55,6 +56,7 @@ int				ft_key_tab(char **envp, size_t *col);
 int				ft_key_return(char **envp, size_t *col);
 int				ft_key_ctrl_d(char **envp, size_t *col);
 
+void			ft_raw_mode(void);
 void			ft_default_mode(void);
 
 int				ft_match(char *s1, char *s2);
