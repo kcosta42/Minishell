@@ -6,7 +6,7 @@
 /*   By: kcosta <kcosta@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/12/07 12:43:07 by kcosta            #+#    #+#             */
-/*   Updated: 2016/12/22 15:54:14 by kcosta           ###   ########.fr       */
+/*   Updated: 2016/12/22 16:08:29 by kcosta           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,7 +91,7 @@ static void		sig_handler(int signal)
 	ft_display_prompt(NULL);
 }
 
-static void		ft_command_handler(char **argv, char **envp)
+static void		ft_command_handler(char **argv, char ***envp)
 {
 	char	**multi;
 	int		index;
@@ -101,12 +101,12 @@ static void		ft_command_handler(char **argv, char **envp)
 	while (multi[index])
 	{
 		argv = ft_get_commands(multi[index++]);
-		if (ft_builtins(argv[0], argv, &envp))
+		if (ft_builtins(argv[0], argv, envp))
 		{
 			g_process = fork();
 			if (!g_process)
 			{
-				if (!ft_find_command(argv[0], argv, envp))
+				if (!ft_find_command(argv[0], argv, *envp))
 					ft_printf("0sh: Command not found: %s\n", argv[0]);
 			}
 			if (g_process > 0)
@@ -143,7 +143,7 @@ int				main(int argc, char **argv, char **envp)
 		if (argc == -2)
 			continue ;
 		ft_add_history(*ft_get_input());
-		ft_command_handler(argv, envp);
+		ft_command_handler(argv, &envp);
 	}
 	return (0);
 }
