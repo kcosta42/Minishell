@@ -6,7 +6,7 @@
 /*   By: kcosta <kcosta@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/12/07 12:43:07 by kcosta            #+#    #+#             */
-/*   Updated: 2016/12/22 16:08:29 by kcosta           ###   ########.fr       */
+/*   Updated: 2016/12/22 16:57:48 by kcosta           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,16 +91,15 @@ static void		sig_handler(int signal)
 	ft_display_prompt(NULL);
 }
 
-static void		ft_command_handler(char **argv, char ***envp)
+static void		ft_command_handler(int argc, char **argv, char ***envp)
 {
 	char	**multi;
-	int		index;
 
-	index = 0;
+	argc = 0;
 	multi = ft_strsplit(*ft_get_input(), ';');
-	while (multi[index])
+	while (multi[argc])
 	{
-		argv = ft_get_commands(multi[index++]);
+		argv = ft_get_commands(multi[argc++]);
 		if (ft_builtins(argv[0], argv, envp))
 		{
 			g_process = fork();
@@ -116,6 +115,7 @@ static void		ft_command_handler(char **argv, char ***envp)
 		}
 		ft_tabdel(&argv);
 	}
+	g_reset = 0;
 	ft_tabdel(&multi);
 	ft_strdel(ft_get_input());
 }
@@ -143,7 +143,7 @@ int				main(int argc, char **argv, char **envp)
 		if (argc == -2)
 			continue ;
 		ft_add_history(*ft_get_input());
-		ft_command_handler(argv, &envp);
+		ft_command_handler(argc, argv, &envp);
 	}
 	return (0);
 }
